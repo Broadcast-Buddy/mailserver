@@ -1,6 +1,6 @@
 services:
   mailserver:
-    image: ghcr.io/docker-mailserver/docker-mailserver:latest
+    image: ghcr.io/broadcast-buddy/mailserver:latest
     container_name: mailserver
     hostname: mail.broadcastbuddy.app
     domainname: broadcastbuddy.app
