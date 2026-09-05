@@ -29,3 +29,20 @@ services:
       - /etc/letsencrypt/:/etc/letsencrypt/:ro
     cap_add:
       - NET_ADMIN
+
+  webmail:
+    image: roundcube/roundcubemail:latest
+    container_name: webmail
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - ROUNDCUBEMAIL_DEFAULT_HOST=tls://mailserver
+      - ROUNDCUBEMAIL_DEFAULT_PORT=143
+      - ROUNDCUBEMAIL_SMTP_SERVER=tls://mailserver
+      - ROUNDCUBEMAIL_SMTP_PORT=587
+      - ROUNDCUBEMAIL_UPLOAD_MAX_FILESIZE=25M
+    volumes:
+      - ./webmail-db/:/var/roundcube/db
+    depends_on:
+      - mailserver
