@@ -1,0 +1,31 @@
+services:
+  mailserver:
+    image: ghcr.io/docker-mailserver/docker-mailserver:latest
+    container_name: mailserver
+    hostname: mail.broadcastbuddy.app
+    domainname: broadcastbuddy.app
+    restart: always
+    ports:
+      - "25:25"     # SMTP
+      - "143:143"   # IMAP
+      - "465:465"   # SMTPS (Implicit TLS)
+      - "587:587"   # SMTP Submission (STARTTLS)
+      - "993:993"   # IMAPS (Implicit TLS)
+    environment:
+      - OVERRIDE_HOSTNAME=mail.broadcastbuddy.app
+      - DMS_SSL=letsencrypt
+      - ONE_DIR=1
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=0
+      - ENABLE_FAIL2BAN=1
+      - ENABLE_POSTGREY=0
+      - SSL_TYPE=letsencrypt
+      - LOG_LEVEL=info
+    volumes:
+      - ./mail-data/:/var/mail/
+      - ./mail-state/:/var/mail-state/
+      - ./mail-logs/:/var/log/mail/
+      - ./mail-config/:/tmp/docker-mailserver/
+      - /etc/letsencrypt/:/etc/letsencrypt/:ro
+    cap_add:
+      - NET_ADMIN
